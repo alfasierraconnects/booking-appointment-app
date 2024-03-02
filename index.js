@@ -33,11 +33,26 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(userDetails);
         localStorage.setItem(`${username}`, userDetails);
 
+        //Add li with Delete btn----------------------------------------------------------------------------------------------
+        const deletebtn = document.createElement("button");
+        deletebtn.textContent = "Delete";
+        deletebtn.id = "delete-btn";
+
         const userList = document.getElementById("userList");
         const newli = document.createElement("li");
-        newli.textContent = userDetails;
+
+        newli.innerHTML = `${myObj.Username} - ${myObj.Email} - ${myObj.Phone}`;
+        newli.appendChild(deletebtn);
         userList.appendChild(newli);
-        // const fetchedUser = JSON.parse(localStorage.getItem(`${username}`));
+
+        //Delete btn Functionality---------------------------------------------------------------------------------------------
+        document
+          .getElementById("delete-btn")
+          .addEventListener("click", deleteItem);
+        function deleteItem(event) {
+          localStorage.removeItem(username);
+          event.target.parentNode.remove();
+        }
       }
     });
 });
