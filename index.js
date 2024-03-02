@@ -31,10 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const userDetails = JSON.stringify(myObj);
         console.log(userDetails);
-        localStorage.setItem("User Details", userDetails);
+        localStorage.setItem(`${username}`, userDetails);
 
-        const fetchedUser = JSON.parse(localStorage.getItem("User Details"));
-        console.log(fetchedUser);
+        const userList = document.getElementById("userList");
+        const newli = document.createElement("li");
+        newli.textContent = userDetails;
+        userList.appendChild(newli);
+        // const fetchedUser = JSON.parse(localStorage.getItem(`${username}`));
       }
     });
 });
