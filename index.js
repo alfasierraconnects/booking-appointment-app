@@ -104,7 +104,7 @@ function editLi(li, obj) {
   let phoneVal = phone.value.trim();
 
   if (userNameVal !== "" && emailVal !== "" && phoneVal !== "") {
-    const obj = {
+    const UpdatedObj = {
       userName: userNameVal,
       email: emailVal,
       phone: phoneVal,
@@ -113,12 +113,17 @@ function editLi(li, obj) {
     axios
       .put(
         `https://crudcrud.com/api/9ccc742a0bef465c98da05cddb6ec2c0/appointment/${obj._id}`,
-        obj
+        UpdatedObj
       )
       .then((result) => {
         console.log(result);
         userList.removeChild(li);
-        displayLi(result.data);
+        axios
+          .get(
+            `https://crudcrud.com/api/9ccc742a0bef465c98da05cddb6ec2c0/appointment/${obj._id}`
+          )
+          .then((result) => displayLi(result.data))
+          .catch((err) => console.log(err));
         console.log("User updated");
       })
       .catch((err) => console.log(err));
