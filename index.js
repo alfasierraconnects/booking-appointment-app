@@ -68,8 +68,26 @@ function submit() {
 function displayLi(obj) {
   const li = document.createElement("li");
   li.textContent = `${obj.userName} - ${obj.email} - ${obj.phone}`;
-  console.log(li);
-  li.appendChild(deletebtn.cloneNode(true));
+  // console.log(li);
+
+  const deleteButton = deletebtn.cloneNode(true);
+  deleteButton.addEventListener("click", () => deleteLi(li, obj));
+
+  li.appendChild(deleteButton);
   li.appendChild(editbtn.cloneNode(true));
   userList.appendChild(li);
+}
+
+//delete btn funtionality
+function deleteLi(li, obj) {
+  axios
+    .delete(
+      `https://crudcrud.com/api/9ccc742a0bef465c98da05cddb6ec2c0/appointment/${obj._id}`
+    )
+    .then((result) => {
+      console.log(result);
+      userList.removeChild(li);
+      console.log("User removed");
+    })
+    .catch((err) => console.log(err));
 }
