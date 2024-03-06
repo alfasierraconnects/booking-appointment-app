@@ -1,77 +1,57 @@
-document.addEventListener("DOMContentLoaded", function () {
-  document
-    .querySelector('button[type="reset"]')
-    .addEventListener("click", function () {
-      const inputs = document.querySelectorAll(".form input");
-      inputs.forEach((el) => {
-        el.value = "";
-      });
-    });
+const userName = document.getElementById("username");
+const email = document.getElementById("email");
+const phone = document.getElementById("phone");
 
-  document
-    .querySelector('button[type="submit"]')
-    .addEventListener("click", function () {
-      const username = document.getElementById("username").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
+const resetbtn = document.querySelector("button[type = reset]");
+const submitbtn = document.querySelector("button[type = submit]");
+const deletebtn = document.createElement("button");
+deletebtn.textContent = "Delete";
+deletebtn.setAttribute("class", "delete");
+const editbtn = document.createElement("button");
+editbtn.textContent = "Edit";
+editbtn.setAttribute("class", "edit");
 
-      if (username !== "" && email !== "" && phone !== "") {
-        // console.log(username, email, phone);
+//reset btn funtionality
+resetbtn.addEventListener("click", reset);
 
-        // localStorage.setItem("Username", username);
-        // localStorage.setItem("email", email);
-        // localStorage.setItem("Phone", phone);
+function reset() {
+  userName.value = "";
+  email.value = "";
+  phone.value = "";
+}
 
-        //using JSON---------------------------------------------------------------------------------------------------------
-        const myObj = {
-          Username: username,
-          Email: email,
-          Phone: phone,
-        };
+//submit btn funtionality
+submitbtn.addEventListener("click", submit);
 
-        const userDetails = JSON.stringify(myObj);
-        console.log(userDetails);
-        localStorage.setItem(`${username}`, userDetails);
+function submit() {
+  let userNameVal = userName.value.trim();
+  let emailVal = email.value.trim();
+  let phoneVal = phone.value.trim();
 
-        //Add li with Delete btn & Edit Btn-----------------------------------------------------------------------------------
-        const deletebtn = document.createElement("button");
-        deletebtn.textContent = "Delete";
-        deletebtn.id = "delete-btn";
+  if (userNameVal !== "" && emailVal !== "" && phoneVal !== "") {
+    const obj = {
+      userName: userNameVal,
+      email: emailVal,
+      phone: phoneVal,
+    };
 
-        const editbtn = document.createElement("button");
-        editbtn.textContent = "Edit";
-        editbtn.id = "edit-btn";
+    displayLi(obj);
 
-        const userList = document.getElementById("userList");
-        const newli = document.createElement("li");
+    axios
+      .post(
+        "https://crudcrud.com/api/9ccc742a0bef465c98da05cddb6ec2c0/appointment",
+        obj
+      )
+      .then((result) => console.log(result))
+      .catch((err) => console.log(err));
+  }
+}
 
-        newli.innerHTML = `${myObj.Username} - ${myObj.Email} - ${myObj.Phone}`;
-        newli.appendChild(deletebtn);
-        newli.appendChild(editbtn);
-        userList.appendChild(newli);
-
-        document.getElementById("username").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("phone").value = "";
-
-        //Delete btn Functionality---------------------------------------------------------------------------------------------
-        document
-          .getElementById("delete-btn")
-          .addEventListener("click", deleteItem);
-        function deleteItem(event) {
-          localStorage.removeItem(username);
-          event.target.parentNode.remove();
-        }
-
-        //Edit btn Functionality-----------------------------------------------------------------------------------------------
-        document.getElementById("edit-btn").addEventListener("click", editItem);
-        function editItem(event) {
-          document.getElementById("username").value = username;
-          document.getElementById("email").value = email;
-          document.getElementById("phone").value = phone;
-          localStorage.removeItem(username);
-          event.target.parentNode.remove();
-        }
-      }
-    });
-});
+function displayLi(obj) {
+  const li = document.createElement("li");
+  li.textContent = `${obj.userName} - ${obj.email} - ${obj.phone}`;
+  console.log(li);
+  li.appendChild(deletebtn.cloneNode(true));
+  li.appendChild(editbtn.cloneNode(true));
+  document.getElementById("userList").appendChild(li);
+}
