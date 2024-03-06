@@ -51,18 +51,21 @@ function submit() {
       phone: phoneVal,
     };
 
-    displayLi(obj);
-
     axios
       .post(
         "https://crudcrud.com/api/9ccc742a0bef465c98da05cddb6ec2c0/appointment",
         obj
       )
-      .then((result) => console.log(result))
+      .then((result) => {
+        console.log(result);
+        displayLi(result.data);
+      })
       .catch((err) => console.log(err));
-  }
 
-  reset();
+    reset();
+  } else {
+    alert("Incomplete Form");
+  }
 }
 
 function displayLi(obj) {
@@ -72,9 +75,11 @@ function displayLi(obj) {
 
   const deleteButton = deletebtn.cloneNode(true);
   deleteButton.addEventListener("click", () => deleteLi(li, obj));
+  const editButton = editbtn.cloneNode(true);
+  editButton.addEventListener("click", () => editLi(li, obj));
 
   li.appendChild(deleteButton);
-  li.appendChild(editbtn.cloneNode(true));
+  li.appendChild(editButton);
   userList.appendChild(li);
 }
 
@@ -90,4 +95,36 @@ function deleteLi(li, obj) {
       console.log("User removed");
     })
     .catch((err) => console.log(err));
+}
+
+//edit btn funtionality
+function editLi(li, obj) {
+  let userNameVal = userName.value.trim();
+  let emailVal = email.value.trim();
+  let phoneVal = phone.value.trim();
+
+  if (userNameVal !== "" && emailVal !== "" && phoneVal !== "") {
+    const obj = {
+      userName: userNameVal,
+      email: emailVal,
+      phone: phoneVal,
+    };
+
+    axios
+      .put(
+        `https://crudcrud.com/api/9ccc742a0bef465c98da05cddb6ec2c0/appointment/${obj._id}`,
+        obj
+      )
+      .then((result) => {
+        console.log(result);
+        userList.removeChild(li);
+        displayLi(result.data);
+        console.log("User updated");
+      })
+      .catch((err) => console.log(err));
+
+    reset();
+  } else {
+    alert("Fill the details in form");
+  }
 }
