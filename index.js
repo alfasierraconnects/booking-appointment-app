@@ -1,6 +1,7 @@
 const userName = document.getElementById("username");
 const email = document.getElementById("email");
 const phone = document.getElementById("phone");
+const userList = document.getElementById("userList");
 
 const resetbtn = document.querySelector("button[type = reset]");
 const submitbtn = document.querySelector("button[type = submit]");
@@ -10,6 +11,21 @@ deletebtn.setAttribute("class", "delete");
 const editbtn = document.createElement("button");
 editbtn.textContent = "Edit";
 editbtn.setAttribute("class", "edit");
+
+//get previously stored data from database
+window.addEventListener("DOMContentLoaded", () => {
+  axios
+    .get(
+      "https://crudcrud.com/api/9ccc742a0bef465c98da05cddb6ec2c0/appointment"
+    )
+    .then((response) => {
+      console.log(response);
+      for (let i = 0; i < response.data.length; i++) {
+        displayLi(response.data[i]);
+      }
+    })
+    .catch((err) => console.log(err));
+});
 
 //reset btn funtionality
 resetbtn.addEventListener("click", reset);
@@ -45,6 +61,8 @@ function submit() {
       .then((result) => console.log(result))
       .catch((err) => console.log(err));
   }
+
+  reset();
 }
 
 function displayLi(obj) {
@@ -53,5 +71,5 @@ function displayLi(obj) {
   console.log(li);
   li.appendChild(deletebtn.cloneNode(true));
   li.appendChild(editbtn.cloneNode(true));
-  document.getElementById("userList").appendChild(li);
+  userList.appendChild(li);
 }
